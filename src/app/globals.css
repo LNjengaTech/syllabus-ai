@@ -24,3 +24,37 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Custom Utility classes to handle the 3D space needed for a flip: for flashcards*/
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+}
+
+.card-container {
+  perspective: 1000px;
+}
+.card-inner {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+.card-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+.card-front, .card-back {
+  backface-visibility: hidden;
+}
+.card-back {
+  transform: rotateY(180deg);
+}
