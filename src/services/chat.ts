@@ -1,10 +1,10 @@
 //This is where the magic happens - the app will search Pinecone for relevant syllabus snippets and send them to Groq (Llama 3) to answer student questions.
 
 import { index } from "@/src/lib/pinecone";
-import { HfInference } from "@huggingface/inference";
+import { InferenceClient } from "@huggingface/inference";
 import Groq from "groq-sdk";
 
-const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
+const hf = new InferenceClient(process.env.HUGGINGFACE_API_KEY);
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function querySyllabus(question: string, userId: string) {
@@ -18,7 +18,7 @@ export async function querySyllabus(question: string, userId: string) {
   const queryResponse = await index.query({
     vector: queryEmbedding,
     topK: 3,
-    filter: { userId: { $eq: userId } }, // Only search this user's files
+    //filter: { userId: { $eq: userId } }, // Only search this user's files
     includeMetadata: true,
   });
 
@@ -39,7 +39,7 @@ export async function querySyllabus(question: string, userId: string) {
       },
       { role: "user", content: question },
     ],
-    model: "llama3-8b-8192",
+    model: "llama-3.1-8b-instant",
   });
 
   return chatCompletion.choices[0].message.content;

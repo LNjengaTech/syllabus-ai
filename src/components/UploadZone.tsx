@@ -19,31 +19,44 @@ export default function UploadZone() {
     try {
       setIsUploading(true);
       
-      // 1. Upload file to Supabase Storage
+      // 1. Prepare unique filename
       const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
       
-      const { data, error: uploadError } = await supabase.storage
+      // 2. Upload to Supabase Storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from('syllabi')
         .upload(fileName, file);
 
       if (uploadError) throw uploadError;
 
-      // 2. Save file reference to Database
+      // 3. Save reference to Supabase Database
       const { error: dbError } = await supabase
         .from('course_files')
         .insert({
           user_id: user.id,
-          file_url: data.path,
+          file_url: uploadData.path,
           file_name: file.name
         });
 
       if (dbError) throw dbError;
 
-      alert("File uploaded successfully!");
-    } catch (error) {
-      console.error(error);
-      alert("Upload failed.");
+      // 4. Trigger AI Ingestion (The missing link)
+      const ingestRes = await fetch("/api/ingest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          fileUrl: uploadData.path, 
+          fileId: fileName 
+        }),
+      });
+
+      if (!ingestRes.ok) throw new Error("AI Processing failed");
+
+      alert("Syllabus uploaded and AI is ready!");
+    } catch (error: unknown) {
+      console.error("Upload Error:", error);
+      alert(error instanceof Error ? error.message : "Upload failed.");
     } finally {
       setIsUploading(false);
     }
