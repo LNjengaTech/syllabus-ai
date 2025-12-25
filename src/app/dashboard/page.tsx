@@ -1,5 +1,6 @@
 import Navbar from "@/src/components/Navbar";
 import UploadZone from "@/src/components/UploadZone";
+import ChatInterface from "@/src/components/ChatInterface";
 
 export default function Dashboard() {
   return (
@@ -13,6 +14,7 @@ export default function Dashboard() {
 
         <section>
           <UploadZone />
+          <ChatInterface />
         </section>
       </div>
     </div>
