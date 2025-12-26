@@ -19,18 +19,18 @@ export default function UploadZone() {
     try {
       setIsUploading(true);
       
-      // 1. Prepare unique filename
+      //prepare unique filename
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}-${Date.now()}.${fileExt}`;
       
-      // 2. Upload to Supabase Storage
+      //upload to Supabase Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('syllabi')
         .upload(fileName, file);
 
       if (uploadError) throw uploadError;
 
-      // 3. Save reference to Supabase Database
+      //Save reference to Supabase Database
       const { error: dbError } = await supabase
         .from('course_files')
         .insert({
@@ -41,7 +41,7 @@ export default function UploadZone() {
 
       if (dbError) throw dbError;
 
-      // 4. Trigger AI Ingestion (The missing link)
+      //trigger AI Ingestion
       const ingestRes = await fetch("/api/ingest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

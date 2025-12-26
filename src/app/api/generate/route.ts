@@ -12,18 +12,18 @@ export async function POST(req: Request) {
   try {
     const { type } = await req.json();
 
-    // 1. Try to get context with polling/retry
+    //Trying to get context with polling/retry
     const context = await getContextWithRetry(userId);
 
     if (!context) {
-      // Return 404 to tell the UI that the file isn't ready yet
+      //Returning 404 to tell the UI that the file isn't ready yet
       return NextResponse.json(
         { error: "Syllabus is still being processed by the AI. Please wait 5 seconds." }, 
         { status: 404 }
       );
     }
 
-    // 2. Generate the material
+    //Generate the material
     const result = await generateStudyMaterial(context, type);
 
     return NextResponse.json({ result });

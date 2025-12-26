@@ -1,4 +1,4 @@
-//conecting my app to pinecone vector db
+//conecting the app to pinecone vector db
 
 import { Pinecone } from "@pinecone-database/pinecone";
 

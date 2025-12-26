@@ -28,7 +28,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Custom Utility classes to handle the 3D space needed for a flip: for flashcards*/
+/*custom Utility classes to handle the 3D space needed for a flip: for flashcards*/
 @layer utilities {
   .perspective-1000 {
     perspective: 1000px;

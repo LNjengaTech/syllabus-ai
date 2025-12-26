@@ -15,10 +15,10 @@ export async function ingestPdf(buffer: Buffer, fileId: string, userId: string) 
       throw new Error('PDF contains no text');
     }
 
-  // Chunking text into ~500-1000 character pieces
+  //chunking text into ~500-1000 character pieces
   const chunks = rawText.match(/[\s\S]{1,1000}/g) || [];
 
-  // Generate real embeddings using Hugging Face
+  //generate real embeddings using Hugging Face
   const EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2";
   
   const embeddings = await hf.featureExtraction({
@@ -28,7 +28,7 @@ export async function ingestPdf(buffer: Buffer, fileId: string, userId: string) 
 
   const vectors = chunks.map((chunk: string, i:number) => ({
     id: `${fileId}-${i}`,
-    values: embeddings[i], // These are the actual math vectors now
+    values: embeddings[i], //the actual math vectors
     metadata: {
       text: chunk,
       userId,
@@ -36,7 +36,7 @@ export async function ingestPdf(buffer: Buffer, fileId: string, userId: string) 
     },
   }));
 
-  // Upsert to Pinecone (Ensure your index dimension is set to 384 for this model)
+  //upsert to Pinecone (index dimension should be set to 384 for this model)
   await index.upsert(vectors);
   
   return { success: true, chunkCount: chunks.length };

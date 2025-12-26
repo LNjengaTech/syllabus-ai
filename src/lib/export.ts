@@ -9,9 +9,8 @@ export const exportToPdf = async (elementId: string, fileName: string): Promise<
       return false;
     }
 
-    // DYNAMIC IMPORT: This prevents the "self is not defined" error
-    // because it only loads the library when the button is clicked.
-    // @ts-ignore
+    //DYNAMIC IMPORT: This prevents the "self is not defined" error because it only loads the library when the button is clicked.
+    //@ts-ignore
     const html2pdf = (await import('html2pdf.js')).default;
 
     const opt = {

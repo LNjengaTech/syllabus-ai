@@ -1,6 +1,6 @@
 import { createBrowserClient } from '@supabase/ssr'
 
-//Initializing the Supabase client for client-side use
+//initializing the Supabase client for client-side use
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY;

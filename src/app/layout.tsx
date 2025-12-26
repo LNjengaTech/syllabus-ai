@@ -1,4 +1,4 @@
-//includes the clerk provider and sets  up global styles and fontss
+//includes the clerk provider, theme provider and sets  up global styles and fontss
 import { ThemeProvider } from "@/src/components/ThemeProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";

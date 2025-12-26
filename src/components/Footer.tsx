@@ -1,4 +1,3 @@
-//For my logo, the light and dark toggle, and the Clerk User button.
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
