@@ -11,16 +11,16 @@ export default function Footer() {
           
 
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            &copy; {currentYear} Syllabus AI. All rights reserved.
+            &copy; {currentYear} SyllabusAI. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 space-x-4">
             <a 
-              href="https://github.com/LNjengaTech" 
+              href="https://lonnex.vercel.app" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 transition"
             >
-              Source Code (GitHub)
+              Developed by Lonnex
             </a>
           </div>
 

@@ -79,10 +79,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 text-black dark:text-gray-100">
       <Navbar />
 
-      <main className="max-w-6xl mx-auto py-12 px-6">
+      <main className="max-w-6xl mx-auto py-12 px-6  bg-gray-100 dark:bg-gray-950 text-black dark:text-gray-100" >
         {/* Header Section */}
         <header className="mb-12 text-center">
           <div className="inline-flex items-center justify-center p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">

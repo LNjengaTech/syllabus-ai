@@ -9,21 +9,25 @@ const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 export async function getContextWithRetry(userId: string, retries = 3) {
   for (let i = 0; i < retries; i++) {
+    //using a query that actually looks for the userId metadata
     const queryResponse = await index.query({
-      vector: new Array(384).fill(0), 
+      //using a very small non-zero value to satisfy the vector requirement
+      vector: new Array(384).fill(0.1), 
       topK: 10,
       filter: { userId: { $eq: userId } },
       includeMetadata: true,
     });
 
+    //CHECK: Does Pinecone see any records for this user?
     if (queryResponse.matches && queryResponse.matches.length > 0) {
+      console.log(`Found ${queryResponse.matches.length} matches for user ${userId}`);
       return queryResponse.matches
         .map((match) => match.metadata?.text)
         .join("\n\n");
     }
 
-    console.log(`Attempt ${i + 1}: Data not indexed yet, retrying in 2s...`);
-    if (i < retries - 1) await delay(2000); 
+    console.log(`Attempt ${i + 1}: Pinecone index for ${userId} not ready...`);
+    if (i < retries - 1) await delay(2000);
   }
   return null;
 }
