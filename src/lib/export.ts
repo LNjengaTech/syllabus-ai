@@ -1,5 +1,10 @@
+// src/lib/export.ts
 'use client';
 
+/**
+ * Exports a DOM element to a PDF file.
+ * Uses as const to satisfy strict TypeScript literal types for html2pdf.
+ */
 export const exportToPdf = async (elementId: string, fileName: string): Promise<boolean> => {
   try {
     const element = document.getElementById(elementId);
@@ -9,23 +14,26 @@ export const exportToPdf = async (elementId: string, fileName: string): Promise<
       return false;
     }
 
-    //DYNAMIC IMPORT: This prevents the "self is not defined" error because it only loads the library when the button is clicked.
-    //@ts-ignore
+    // DYNAMIC IMPORT: Prevents "self is not defined" error in Next.js SSR
+    // @ts-ignore
     const html2pdf = (await import('html2pdf.js')).default;
 
     const opt = {
       margin: 0.5,
       filename: `${fileName}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
+      image: { 
+        type: 'jpeg' as const, // Fixed: Literal type assertion
+        quality: 0.98 
+      },
       html2canvas: { 
         scale: 2,
         useCORS: true, 
         logging: false 
       },
       jsPDF: { 
-        unit: 'in', 
-        format: 'letter', 
-        orientation: 'portrait' 
+        unit: 'in' as const,         // Fixed: Literal type assertion
+        format: 'letter' as const,    // Fixed: Literal type assertion
+        orientation: 'portrait' as const // Fixed: Literal type assertion
       }
     };
 
