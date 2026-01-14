@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     //set the wrapper to flex and full height
-    <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-950 text-black dark:text-gray-100">
+    <div className="flex flex-col min-h-[95vh] md:min-h-[100vh] bg-gray-100 dark:bg-gray-950 text-black dark:text-gray-100">
       <Navbar />
       
       {/*set the content area to 'flex-grow' to push the footer down */}
