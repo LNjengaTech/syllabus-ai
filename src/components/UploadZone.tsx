@@ -14,15 +14,15 @@ export default function UploadZone() {
   const [limitReached, setLimitReached] = useState(false);
   const supabase = createClient();
 
-  // Fetch subscription status on mount
+  //fetch subscription status on mount
   useEffect(() => {
     async function fetchStatus() {
       if (!user) return;
-      
+
       try {
         const response = await fetch('/api/subscription/status');
         const data = await response.json();
-        
+
         setUploadCount(data.uploadCount || 0);
         setIsPremium(data.isPremium || false);
         setLimitReached(!data.allowed);
@@ -30,7 +30,7 @@ export default function UploadZone() {
         console.error('Failed to fetch subscription status:', error);
       }
     }
-    
+
     fetchStatus();
   }, [user]);
 
@@ -40,11 +40,11 @@ export default function UploadZone() {
 
     try {
       setIsUploading(true);
-      
+
       //prepare unique filename
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-      
+
       //upload to Supabase Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('syllabi')
@@ -67,16 +67,16 @@ export default function UploadZone() {
       const ingestRes = await fetch("/api/ingest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          fileUrl: uploadData.path, 
-          fileId: fileName 
+        body: JSON.stringify({
+          fileUrl: uploadData.path,
+          fileId: fileName
         }),
       });
 
       const ingestData = await ingestRes.json();
 
       if (!ingestRes.ok) {
-        // Check if it's a paywall error
+        //check if it's a paywall error
         if (ingestData.upgradeRequired) {
           setLimitReached(true);
           alert(ingestData.message + "\n\nRedirecting to pricing page...");
@@ -87,8 +87,8 @@ export default function UploadZone() {
       }
 
       alert("Syllabus uploaded and AI is ready!");
-      
-      // Refresh subscription status
+
+      //refresh subscription status
       const statusRes = await fetch('/api/subscription/status');
       const statusData = await statusRes.json();
       setUploadCount(statusData.uploadCount || 0);
@@ -103,9 +103,9 @@ export default function UploadZone() {
 
   return (
     <div className="w-full max-w-xl mx-auto space-y-4">
-      {/* Subscription Status Banner */}
+      {/*subscription status banner */}
       {!isPremium && (
-        <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-lg border border-blue-200 dark:border-blue-800">
+        <div className="p-4 bg-linear-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-lg border-2 border-blue-200 dark:border-blue-800">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold">
@@ -113,12 +113,12 @@ export default function UploadZone() {
               </p>
               {limitReached && (
                 <p className="text-xs text-red-600 dark:text-red-400 mt-1">
-                  🚫 Upload limit reached
+                  Upload limit reached !
                 </p>
               )}
             </div>
             <Link href="/pricing">
-              <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full text-sm font-semibold hover:from-blue-700 hover:to-purple-700 transition">
+              <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-semibold hover:bg-blue-700">
                 <Crown className="w-4 h-4" />
                 Upgrade
               </button>
@@ -128,7 +128,7 @@ export default function UploadZone() {
       )}
 
       {isPremium && (
-        <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950 dark:to-orange-950 rounded-lg border border-yellow-200 dark:border-yellow-800">
+        <div className="p-4 bg-linear-to-r from-yellow-50 to-orange-50 dark:from-yellow-950 dark:to-orange-950 rounded-lg border border-yellow-200 dark:border-yellow-800">
           <div className="flex items-center gap-2">
             <Crown className="w-5 h-5 text-yellow-600" />
             <p className="text-sm font-semibold">Premium Member - Unlimited Uploads this month</p>
@@ -136,18 +136,18 @@ export default function UploadZone() {
         </div>
       )}
 
-      {/* Upload Zone */}
-      <div className="w-full p-8 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl bg-card text-center">
-        <input 
-          type="file" 
-          id="file-upload" 
-          className="hidden" 
-          accept=".pdf" 
+      {/*Upload Zone */}
+      <div className="w-full p-8 border-2 border-dashed border-gray-300 dark:border-gray-400 rounded-xl bg-card text-center">
+        <input
+          type="file"
+          id="file-upload"
+          className="hidden"
+          accept=".pdf"
           onChange={handleUpload}
           disabled={isUploading || limitReached}
         />
-        <label 
-          htmlFor="file-upload" 
+        <label
+          htmlFor="file-upload"
           className={`cursor-pointer flex flex-col items-center gap-4 ${limitReached ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           {isUploading ? (
@@ -157,7 +157,7 @@ export default function UploadZone() {
           )}
           <div>
             <p className="text-lg font-semibold">
-              {limitReached ? '🔒 Upgrade to upload more' : 'Click to upload syllabus'}
+              {limitReached ? '🔒 Upgrade to upload more' : 'Click to upload PDF'}
             </p>
             <p className="text-sm text-muted-foreground">PDF files only (Max 5MB)</p>
           </div>

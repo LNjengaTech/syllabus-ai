@@ -10,8 +10,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 /**
- * Stripe Webhook Handler
- * Listens for checkout.session.completed events
+ *stripe webhook handler
+ * 
+ *listens for checkout.session.completed events
  */
 export async function POST(req: Request) {
     const body = await req.text();
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
         return new NextResponse("Invalid signature", { status: 400 });
     }
 
-    // Handle the event
+    //handle the event
     switch (event.type) {
         case "checkout.session.completed": {
             const session = event.data.object as Stripe.Checkout.Session;
@@ -38,22 +39,22 @@ export async function POST(req: Request) {
                 return new NextResponse("Missing userId", { status: 400 });
             }
 
-            // Calculate subscription end date (1 month from now)
+            //calculate subscription end date (1 month from now)
             const subscriptionEndDate = new Date();
             subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 1);
 
-            // Update user profile to premium
+            //update user profile to premium
             await upsertUserProfile(userId, {
                 is_premium: true,
                 subscription_end_date: subscriptionEndDate.toISOString(),
             });
 
-            console.log(`✅ User ${userId} upgraded to Premium via Stripe`);
+            console.log(`User ${userId} upgraded to Premium via Stripe`);
             break;
         }
 
         case "customer.subscription.deleted": {
-            // Handle subscription cancellation
+            //handle subscription cancellation
             const subscription = event.data.object as Stripe.Subscription;
             const userId = subscription.metadata?.userId;
 
@@ -61,7 +62,7 @@ export async function POST(req: Request) {
                 await upsertUserProfile(userId, {
                     is_premium: false,
                 });
-                console.log(`❌ User ${userId} subscription cancelled`);
+                console.log(`User ${userId} subscription cancelled`);
             }
             break;
         }

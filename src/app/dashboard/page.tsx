@@ -1,3 +1,5 @@
+//client component
+
 'use client';
 
 import { useState } from 'react';
@@ -19,7 +21,7 @@ export default function Dashboard() {
   setActiveType(type);
   
   try {
-    const res = await fetch('/api/generate', {
+    const res = await fetch('/api/generateFlashcard', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type }),
@@ -27,13 +29,13 @@ export default function Dashboard() {
     
     const data = await res.json();
 
-    //If the data was actually generated, ignore the 404/Processing status
+    //ff the data was actually generated, ignore the 404/Processing status
     if (data.result) {
       setStudyResult(data.result);
       return; 
     }
 
-    //only alert if we get a 404 AND we don't have a result yet
+    //only alert if it's a 404 AND no result yet
     if (res.status === 404) {
       alert("AI is still indexing the newest chunks. Try again in 5 seconds!");
     } else if (data.error) {
@@ -42,7 +44,7 @@ export default function Dashboard() {
 
   } catch (err) {
     console.error("Generation Error:", err);
-    // Don't alert if it's just a minor timeout but we have data
+    //NO alert if it's just a minor timeout but we have data
   } finally {
     setIsGenerating(false);
   }
@@ -52,8 +54,9 @@ export default function Dashboard() {
     if (!studyResult) return null;
 
     if (activeType === 'flashcards') {
+
       //split by '---' and filter out any blocks that don't contain "Back" or "Answer"
-      //removes the "Here are the flashcards..." intro text.
+      //remove the typical "Here are the flashcards..." intro text.
       const cardData = studyResult.split(/---|\n\n/).filter((c) => c.toLowerCase().includes('back:') || c.toLowerCase().includes('answer:'));
 
       return (
@@ -83,26 +86,26 @@ export default function Dashboard() {
       <Navbar />
 
       <main className="max-w-6xl mx-auto py-12 px-6  bg-gray-100 dark:bg-gray-950 text-black dark:text-gray-100" >
-        {/*Header section */}
+        {/* header */}
         <header className="mb-12 text-center">
           <div className="inline-flex items-center justify-center p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">
             <LayoutDashboard className="text-blue-600 dark:text-blue-400" size={32} />
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight mb-2">Study Command Center</h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Upload your syllabus and let AI build your custom study path.</p>
+          <p className="text-muted-foreground text-lg max-w-2xl font-bold mx-auto">Upload your PDF and let a specialised AI build you a custom study plan.</p>
         </header>
 
-        {/*upload-section */}
+        {/*upload area */}
         <div className="mb-12">
           <UploadZone />
         </div>
 
-        {/*Action controls */}
+        {/*action controls */}
         <div className="flex flex-wrap gap-4 justify-center mb-12">
           <button
             onClick={() => handleGenerate('flashcards')}
             disabled={isGenerating}
-            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full font-semibold transition-all shadow-lg hover:shadow-indigo-500/20 disabled:opacity-50"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full font-semibold transition-all shadow-lg hover:shadow-indigo-500/20 disabled:opacity-50"
           >
             <Sparkles size={20} />
             {isGenerating && activeType === 'flashcards' ? 'AI is thinking...' : 'Generate Flashcards'}
@@ -118,7 +121,7 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/*dynamic result-area */}
+        {/*dynamic result-area*/}
         {studyResult && (
           <section className="mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="flex justify-between items-end mb-6 border-b border-muted pb-4">
@@ -138,7 +141,7 @@ export default function Dashboard() {
           </section>
         )}
 
-        {/*Chat section */}
+        {/*chat section */}
         <section className="mt-16 pt-16 border-t border-muted">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold mb-2">Stuck on a specific detail?</h2>

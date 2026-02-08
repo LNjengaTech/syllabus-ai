@@ -16,20 +16,20 @@ export async function POST(req: Request) {
     try {
         const { priceId } = await req.json();
 
-        // Create Stripe Checkout Session
+        //create stripe checkout session
         const session = await stripe.checkout.sessions.create({
             mode: "subscription",
             payment_method_types: ["card"],
             line_items: [
                 {
-                    price: priceId || process.env.STRIPE_PRICE_ID, // Use env variable as default
+                    price: priceId || process.env.STRIPE_PRICE_ID, //env variable is default
                     quantity: 1,
                 },
             ],
             success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
             metadata: {
-                userId, // Pass Clerk userId to link subscription
+                userId, //!passing Clerk userId to link subscription
             },
         });
 

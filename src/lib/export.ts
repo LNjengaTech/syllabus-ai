@@ -1,8 +1,7 @@
-// src/lib/export.ts
 'use client';
 
 /**
- * Exports a DOM element to a PDF file.
+ *exports a DOM element to a PDF file.
  * Uses as const to satisfy strict TypeScript literal types for html2pdf.
  */
 export const exportToPdf = async (elementId: string, fileName: string): Promise<boolean> => {
@@ -14,7 +13,7 @@ export const exportToPdf = async (elementId: string, fileName: string): Promise<
       return false;
     }
 
-    // DYNAMIC IMPORT: Prevents "self is not defined" error in Next.js SSR
+    //DYNAMIC IMPORT: Prevents "self is not defined" error in Next.js SSR
     // @ts-ignore
     const html2pdf = (await import('html2pdf.js')).default;
 
@@ -22,7 +21,7 @@ export const exportToPdf = async (elementId: string, fileName: string): Promise<
       margin: 0.5,
       filename: `${fileName}.pdf`,
       image: { 
-        type: 'jpeg' as const, // Fixed: Literal type assertion
+        type: 'jpeg' as const, //fixed literal type assertion
         quality: 0.98 
       },
       html2canvas: { 
@@ -30,10 +29,11 @@ export const exportToPdf = async (elementId: string, fileName: string): Promise<
         useCORS: true, 
         logging: false 
       },
+      //fixed literal type assertions
       jsPDF: { 
-        unit: 'in' as const,         // Fixed: Literal type assertion
-        format: 'letter' as const,    // Fixed: Literal type assertion
-        orientation: 'portrait' as const // Fixed: Literal type assertion
+        unit: 'in' as const,         
+        format: 'letter' as const,   
+        orientation: 'portrait' as const
       }
     };
 

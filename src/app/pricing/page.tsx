@@ -24,7 +24,7 @@ export default function PricingPage() {
       });
 
       const { url } = await response.json();
-      
+
       if (url) {
         window.location.href = url;
       }
@@ -51,11 +51,11 @@ export default function PricingPage() {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
-        alert("✅ " + data.message);
+        alert(" " + data.message);
       } else {
-        alert("❌ " + (data.error || "Payment failed"));
+        alert(" " + (data.error || "Payment failed"));
       }
     } catch (error) {
       console.error("M-Pesa checkout failed:", error);
@@ -68,7 +68,7 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-950 text-black dark:text-gray-100">
       <Navbar />
-      
+
       <main className="max-w-6xl mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <h1 className="text-5xl font-extrabold mb-4">
@@ -80,15 +80,15 @@ export default function PricingPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* Free Plan */}
-          <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border-2 border-gray-200 dark:border-gray-800">
+          {/* Free Tier */}
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border-2 border-gray-400 dark:border-gray-500">
             <div className="mb-6">
               <h3 className="text-2xl font-bold mb-2">Free Tier</h3>
               <div className="text-4xl font-extrabold mb-4">
-                $0<span className="text-lg font-normal text-muted-foreground">/month</span>
+                Ksh.0<span className="text-lg font-normal text-muted-foreground">/month</span>
               </div>
             </div>
-            
+
             <ul className="space-y-3 mb-8">
               <li className="flex items-start gap-2">
                 <Check className="w-5 h-5 text-green-600 mt-0.5" />
@@ -117,64 +117,67 @@ export default function PricingPage() {
           </div>
 
           {/* Premium Plan */}
-          <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border-2 border-gray-200 dark:border-gray-800 relative overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 border-2 border-gray-400 dark:border-gray-500 relative overflow-hidden">
             <div className="absolute top-4 right-4">
-              <Crown className="w-8 h-8 text-yellow-300" />
+              <Crown className="w-8 h-8 text-yellow-400" />
             </div>
-            
+
             <div className="mb-6">
               <h3 className="text-2xl font-bold mb-2">Premium</h3>
               <div className="text-4xl font-extrabold mb-4">
-                $9.99<span className="text-lg font-normal opacity-80">/month</span>
+                Ksh 5.99<span className="text-lg font-normal opacity-80">/month</span>
               </div>
-              <p className="text-sm opacity-90">or KES 999 via M-Pesa</p>
+
             </div>
-            
+
             <ul className="space-y-3 mb-8">
               <li className="flex items-start gap-2">
-                <Sparkles className="w-5 h-5 text-yellow-300 mt-0.5" />
+                <Sparkles className="w-5 h-5 text-yellow-400 mt-0.5" />
                 <span className="font-semibold">Unlimited uploads</span>
               </li>
               <li className="flex items-start gap-2">
-                <Zap className="w-5 h-5 text-yellow-300 mt-0.5" />
+                <Zap className="w-5 h-5 text-yellow-400 mt-0.5" />
                 <span>Priority AI processing</span>
               </li>
               <li className="flex items-start gap-2">
-                <Shield className="w-5 h-5 text-yellow-300 mt-0.5" />
+                <Shield className="w-5 h-5 text-yellow-400 mt-0.5" />
                 <span>Advanced analytics</span>
               </li>
               <li className="flex items-start gap-2">
-                <Check className="w-5 h-5 text-yellow-300 mt-0.5" />
+                <Check className="w-5 h-5 text-yellow-400 mt-0.5" />
                 <span>Export to PDF/Anki</span>
               </li>
               <li className="flex items-start gap-2">
-                <Check className="w-5 h-5 text-yellow-300 mt-0.5" />
+                <Check className="w-5 h-5 text-yellow-400 mt-0.5" />
                 <span>Email support</span>
               </li>
             </ul>
 
             {user ? (
               <div className="space-y-3">
-                
-                
-                <div className="border-t border-white/30 pt-3">
-                  <p className="text-sm mb-2 opacity-90">M-Pesa Payment (enter your number)</p>
-                  <input
-                    type="tel"
-                    placeholder="254712345678"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-100 dark:border-gray-800 rounded-lg text-black dark:text-white mb-2"
-                  />
-                  <button
+
+
+                <div className="border-t border-white/30 pt-3 mb-9">
+                  <p className="text-sm ml-2 mb-2 font-bold opacity-90">M-Pesa Payment:</p>
+                  <div className="w-full flex justify-between rounded-full border-2 border-black dark:border-gray-500 text-black dark:text-white mb-2">
+                    <input
+                      type="tel"
+                      placeholder="254712345678"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 12))}
+                      className="px-4 py-2 outline-0 rounded-l-full border-black dark:border-gray-100 text-black dark:text-white"
+                    />
+                     <button
                     onClick={handleMpesaCheckout}
                     disabled={loading !== null}
-                    className="w-full py-3 px-6 rounded-full font-semibold bg-green-600 hover:bg-green-700 transition disabled:opacity-50"
+                    className="py-3 px-8 rounded-full font-semibold bg-green-600 hover:bg-green-700 disabled:opacity-50"
                   >
-                    {loading === "mpesa" ? "Sending STK..." : "Pay With M-Pesa"}
+                    {loading === "mpesa" ? "Sending STK..." : "Pay"}
                   </button>
+                  </div>
                 </div>
 
+                <p className="text-sm ml-2 mb-2 font-bold opacity-90">Card Payment: </p>
                 <button
                   onClick={handleStripeCheckout}
                   disabled={loading !== null}
@@ -202,19 +205,19 @@ export default function PricingPage() {
             <div>
               <h3 className="font-semibold mb-2">Can I cancel anytime?</h3>
               <p className="text-muted-foreground text-sm">
-                Yes! You can cancel your subscription at any time. You'll still have access until the end of your billing period.
+                Yes! You can cancel your subscription at any time. You will still have access until the end of your billing period.
               </p>
             </div>
             <div>
               <h3 className="font-semibold mb-2">Is M-Pesa payment secure?</h3>
               <p className="text-muted-foreground text-sm">
-                Absolutely. We use Safaricom's official Daraja API. We never store your M-Pesa PIN or personal payment information.
+                Absolutely. We use Safaricom&apos;s official Daraja API. We never store your M-Pesa PIN or personal payment information.
               </p>
             </div>
             <div>
               <h3 className="font-semibold mb-2">What happens after 3 free uploads?</h3>
               <p className="text-muted-foreground text-sm">
-                You'll be prompted to upgrade. Your existing files and chat history remain accessible, but new uploads require a Premium subscription.
+                You&apos;ll be prompted to upgrade. Your existing files and chat history remain accessible, but new uploads require a Premium subscription.
               </p>
             </div>
           </div>

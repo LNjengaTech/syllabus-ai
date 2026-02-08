@@ -1,9 +1,12 @@
+//pending fix: "any" error
+
 import { NextResponse } from "next/server";
 import { upsertUserProfile } from "@/src/lib/subscription";
 
 /**
- * M-Pesa Callback Handler
- * Safaricom will POST to this URL after STK Push completion
+ *mpesa callback handler
+
+ * Safcom will POST to this URL after STK Push completion
  */
 export async function POST(req: Request) {
     try {
@@ -16,17 +19,17 @@ export async function POST(req: Request) {
         const metadata = body.Body?.stkCallback?.CallbackMetadata;
 
         if (resultCode === 0) {
-            // Payment successful
+            //payment successful
             const items = metadata?.Item || [];
 
-            // Extract transaction details
+            //extract transaction details
             const amount = items.find((i: any) => i.Name === "Amount")?.Value;
             const mpesaReceiptNumber = items.find((i: any) => i.Name === "MpesaReceiptNumber")?.Value;
             const phoneNumber = items.find((i: any) => i.Name === "PhoneNumber")?.Value;
 
-            console.log(`✅ M-Pesa payment successful: ${mpesaReceiptNumber} - KES ${amount}`);
+            console.log(`M-Pesa payment successful: ${mpesaReceiptNumber} - KES ${amount}`);
 
-            // Extract userId from AccountReference (format: SYLLABUS-{userId})
+            //extract userId from AccountReference(format: SYLLABUS-{userId})
             const accountRef = items.find((i: any) => i.Name === "AccountReference")?.Value;
             const userId = accountRef?.replace("SYLLABUS-", "");
 
@@ -40,13 +43,13 @@ export async function POST(req: Request) {
                     subscription_end_date: subscriptionEndDate.toISOString(),
                 });
 
-                console.log(`✅ User ${userId} upgraded to Premium via M-Pesa`);
+                console.log(`User ${userId} upgraded to Premium via M-Pesa`);
             } else {
-                console.error("Could not extract userId from M-Pesa callback");
+                console.error("Couldn't extract userId from M-Pesa callback");
             }
         } else {
-            // Payment failed or cancelled
-            console.log(`❌ M-Pesa payment failed: ${resultDesc}`);
+            //payment failed or cancelled
+            console.log(`M-Pesa payment failed: ${resultDesc}`);
         }
 
         return NextResponse.json({ ResultCode: 0, ResultDesc: "Accepted" });

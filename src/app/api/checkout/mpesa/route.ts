@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 
 /**
- * M-Pesa Daraja API - STK Push (Lipa Na M-Pesa Online)
- * This is a simplified implementation for sandbox testing
+ *M-Pesa Daraja API - stk Push(Lipa Na M-Pesa Online)
+ *this is just a simplified implementation for sandbox testing,complete implementation in later stages
  */
 
 export async function POST(req: Request) {
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     try {
         const { phoneNumber, amount } = await req.json();
 
-        // Validate phone number (Kenyan format: 254XXXXXXXXX)
+        //validate phone number (Kenyan format: 254XXXXXXXXX)
         if (!phoneNumber || !phoneNumber.match(/^254\d{9}$/)) {
             return NextResponse.json(
                 { error: "Invalid phone number. Use format: 254XXXXXXXXX" },
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
             );
         }
 
-        // Step 1: Get M-Pesa Access Token
+        //getting mpesa access token
         const authString = Buffer.from(
             `${process.env.MPESA_CONSUMER_KEY}:${process.env.MPESA_CONSUMER_SECRET}`
         ).toString("base64");
@@ -40,18 +40,12 @@ export async function POST(req: Request) {
 
         const { access_token } = await authResponse.json();
 
-        // Step 2: Initiate STK Push
-        const timestamp = new Date()
-            .toISOString()
-            .replace(/[^0-9]/g, "")
-            .slice(0, 14);
+        //initiating the stk Push
+        const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, 14);
 
-        const password = Buffer.from(
-    `${process.env.MPESA_SHORTCODE}${process.env.MPESA_PASSKEY}${timestamp}`
-).toString("base64");
+        const password = Buffer.from(`${process.env.MPESA_SHORTCODE}${process.env.MPESA_PASSKEY}${timestamp}`).toString("base64");
 
-        const stkPushResponse = await fetch(
-            process.env.MPESA_STK_URL || "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
+        const stkPushResponse = await fetch(process.env.MPESA_STK_URL || "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
             {
                 method: "POST",
                 headers: {
@@ -73,6 +67,7 @@ export async function POST(req: Request) {
                 }),
             }
         );
+
 
         const stkData = await stkPushResponse.json();
         console.log("M-PESA DATA:", stkData);

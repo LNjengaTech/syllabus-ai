@@ -14,7 +14,7 @@ export default function Footer() {
               rel="noopener noreferrer" 
               className="text-sm text-gray-600 dark:text-gray-400 hover:text-indigo-800 transition"
             >
-              Developed and Maintained by <span className="font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 transition"> Lonnex</span> 
+              Developed and Maintained by <span className="font-bold text-blue-600 hover:text-blue-800 transition"> Lonnex</span> 
             </a>
           </div>
 

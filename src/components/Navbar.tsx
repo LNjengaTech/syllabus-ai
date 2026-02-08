@@ -4,6 +4,7 @@ import { UserButton, SignedIn, SignedOut, SignInButton, useUser } from '@clerk/n
 import ThemeToggle from './ThemeToggle';
 import { Crown } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import Link from "next/link";
 
 export default function Navbar() {
   const { user } = useUser();
@@ -27,9 +28,12 @@ export default function Navbar() {
 
   return (
     <nav className="flex items-center justify-between px-6 py-6 border-b dark:border-b-gray-400 bg-gray-100 dark:bg-gray-950 text-foreground">
-      <div className="text-xl font-bold tracking-tight text-black dark:text-gray-100">
-        Syllabus<span className="text-blue-600">AI</span>
-      </div>
+      <Link href="/">
+        <div className="text-xl font-bold tracking-tight text-black dark:text-gray-100">
+          Syllabus<span className="text-blue-600">AI</span>
+        </div>
+      </Link>
+      
 
       <div className="flex items-center gap-4">
         <ThemeToggle />
@@ -38,7 +42,7 @@ export default function Navbar() {
             Dashboard
           </a>
           {isPremium && (
-            <div className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full text-xs font-semibold">
+            <div className="flex items-center gap-1 px-3 py-1 bg-linear-to-r from-yellow-400 to-orange-500 text-white rounded-full text-xs font-semibold">
               <Crown className="w-3 h-3" />
               PRO
             </div>
